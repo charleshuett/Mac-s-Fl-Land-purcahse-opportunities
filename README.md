@@ -1,0 +1,2 @@
+# Mac-s-Fl-Land-purcahse-opportunities
+Web map showing Mac's FL properties and their distances in miles to the nearest Substation
