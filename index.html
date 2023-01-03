@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        #map {
+            width: 1596px;
+            height: 862px;
+        }
+        </style>
+        <title>Florida Properties and Substations</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
+        <script src="data/OpportunityZonesFL_0.js"></script>
+        <script src="data/FL_Counties_6.js"></script>
+        <script src="data/DistfromProptoSS_7.js"></script>
+        <script src="data/FL_SubstationsClosest_8.js"></script>
+        <script src="data/FL_Substions_All_9.js"></script>
+        <script src="data/PropertiesFLLT500K_10.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[25.3319344128123,-87.9296149118262],[31.119630281820037,-75.74627822765636]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'feet',
+            secondaryLengthUnit: 'miles',
+            primaryAreaUnit: 'sqfeet',
+            secondaryAreaUnit: 'sqmiles'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        function pop_OpportunityZonesFL_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Opp_Zone</th>\
+                        <td>' + (feature.properties['Opp_Zone'] !== null ? autolinker.link(feature.properties['Opp_Zone'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CENSUSTRAC</th>\
+                        <td>' + (feature.properties['CENSUSTRAC'] !== null ? autolinker.link(feature.properties['CENSUSTRAC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COUNTYNAME</th>\
+                        <td>' + (feature.properties['COUNTYNAME'] !== null ? autolinker.link(feature.properties['COUNTYNAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_OpportunityZonesFL_0_0() {
+            return {
+                pane: 'pane_OpportunityZonesFL_0',
+                opacity: 1,
+                color: 'rgba(244,55,241,0.469)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(243,243,13,0.469)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_OpportunityZonesFL_0');
+        map.getPane('pane_OpportunityZonesFL_0').style.zIndex = 400;
+        map.getPane('pane_OpportunityZonesFL_0').style['mix-blend-mode'] = 'darken';
+        var layer_OpportunityZonesFL_0 = new L.geoJson(json_OpportunityZonesFL_0, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_OpportunityZonesFL_0',
+            layerName: 'layer_OpportunityZonesFL_0',
+            pane: 'pane_OpportunityZonesFL_0',
+            onEachFeature: pop_OpportunityZonesFL_0,
+            style: style_OpportunityZonesFL_0_0,
+        });
+        bounds_group.addLayer(layer_OpportunityZonesFL_0);
+        map.createPane('pane_GoogleHybrid_1');
+        map.getPane('pane_GoogleHybrid_1').style.zIndex = 401;
+        var layer_GoogleHybrid_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleHybrid_1',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleHybrid_1;
+        map.createPane('pane_GoogleMaps2_2');
+        map.getPane('pane_GoogleMaps2_2').style.zIndex = 402;
+        var layer_GoogleMaps2_2 = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleMaps2_2',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_GoogleMaps2_2;
+        map.createPane('pane_OSMStandard_3');
+        map.getPane('pane_OSMStandard_3').style.zIndex = 403;
+        var layer_OSMStandard_3 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_3',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_3;
+        map.createPane('pane_Positronnolabelsretina_4');
+        map.getPane('pane_Positronnolabelsretina_4').style.zIndex = 404;
+        var layer_Positronnolabelsretina_4 = L.tileLayer('http://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}@2x.png', {
+            pane: 'pane_Positronnolabelsretina_4',
+            opacity: 1.0,
+            attribution: '<a href="https://cartodb.com/basemaps/">Map tiles by CartoDB, under CC BY 3.0. Data by OpenStreetMap, under ODbL.</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_Positronnolabelsretina_4;
+        map.createPane('pane_Positron_5');
+        map.getPane('pane_Positron_5').style.zIndex = 405;
+        var layer_Positron_5 = L.tileLayer('http://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            pane: 'pane_Positron_5',
+            opacity: 1.0,
+            attribution: '<a href="https://cartodb.com/basemaps/">Map tiles by CartoDB, under CC BY 3.0. Data by OpenStreetMap, under ODbL.</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_Positron_5;
+        map.addLayer(layer_Positron_5);
+        function pop_FL_Counties_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_FL_Counties_6_0() {
+            return {
+                pane: 'pane_FL_Counties_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.518)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_FL_Counties_6');
+        map.getPane('pane_FL_Counties_6').style.zIndex = 406;
+        map.getPane('pane_FL_Counties_6').style['mix-blend-mode'] = 'normal';
+        var layer_FL_Counties_6 = new L.geoJson(json_FL_Counties_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_FL_Counties_6',
+            layerName: 'layer_FL_Counties_6',
+            pane: 'pane_FL_Counties_6',
+            onEachFeature: pop_FL_Counties_6,
+            style: style_FL_Counties_6_0,
+        });
+        bounds_group.addLayer(layer_FL_Counties_6);
+        function pop_DistfromProptoSS_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">SP$</th>\
+                        <td>' + (feature.properties['SP$'] !== null ? autolinker.link(feature.properties['SP$'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Dist</th>\
+                        <td>' + (feature.properties['Dist'] !== null ? autolinker.link(feature.properties['Dist'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_DistfromProptoSS_7_0(feature) {
+            if (feature.properties['q2wHide_HubDist'] >= 0.040671 && feature.properties['q2wHide_HubDist'] <= 0.527114 ) {
+                return {
+                pane: 'pane_DistfromProptoSS_7',
+                opacity: 1,
+                color: 'rgba(48,18,59,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_HubDist'] >= 0.527114 && feature.properties['q2wHide_HubDist'] <= 1.013557 ) {
+                return {
+                pane: 'pane_DistfromProptoSS_7',
+                opacity: 1,
+                color: 'rgba(62,156,254,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_HubDist'] >= 1.013557 && feature.properties['q2wHide_HubDist'] <= 1.500000 ) {
+                return {
+                pane: 'pane_DistfromProptoSS_7',
+                opacity: 1,
+                color: 'rgba(72,248,130,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_HubDist'] >= 1.500000 && feature.properties['q2wHide_HubDist'] <= 1.986443 ) {
+                return {
+                pane: 'pane_DistfromProptoSS_7',
+                opacity: 1,
+                color: 'rgba(226,220,56,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_HubDist'] >= 1.986443 && feature.properties['q2wHide_HubDist'] <= 2.472886 ) {
+                return {
+                pane: 'pane_DistfromProptoSS_7',
+                opacity: 1,
+                color: 'rgba(239,89,17,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+            if (feature.properties['q2wHide_HubDist'] >= 2.472886 && feature.properties['q2wHide_HubDist'] <= 8.723652 ) {
+                return {
+                pane: 'pane_DistfromProptoSS_7',
+                opacity: 1,
+                color: 'rgba(122,4,3,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_DistfromProptoSS_7');
+        map.getPane('pane_DistfromProptoSS_7').style.zIndex = 407;
+        map.getPane('pane_DistfromProptoSS_7').style['mix-blend-mode'] = 'normal';
+        var layer_DistfromProptoSS_7 = new L.geoJson(json_DistfromProptoSS_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_DistfromProptoSS_7',
+            layerName: 'layer_DistfromProptoSS_7',
+            pane: 'pane_DistfromProptoSS_7',
+            onEachFeature: pop_DistfromProptoSS_7,
+            style: style_DistfromProptoSS_7_0,
+        });
+        bounds_group.addLayer(layer_DistfromProptoSS_7);
+        map.addLayer(layer_DistfromProptoSS_7);
+        function pop_FL_SubstationsClosest_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ID</th>\
+                        <td>' + (feature.properties['ID'] !== null ? autolinker.link(feature.properties['ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CITY</th>\
+                        <td>' + (feature.properties['CITY'] !== null ? autolinker.link(feature.properties['CITY'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ZIP</th>\
+                        <td>' + (feature.properties['ZIP'] !== null ? autolinker.link(feature.properties['ZIP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TYPE</th>\
+                        <td>' + (feature.properties['TYPE'] !== null ? autolinker.link(feature.properties['TYPE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">STATUS</th>\
+                        <td>' + (feature.properties['STATUS'] !== null ? autolinker.link(feature.properties['STATUS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COUNTY</th>\
+                        <td>' + (feature.properties['COUNTY'] !== null ? autolinker.link(feature.properties['COUNTY'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COUNTYFIPS</th>\
+                        <td>' + (feature.properties['COUNTYFIPS'] !== null ? autolinker.link(feature.properties['COUNTYFIPS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LATITUDE</th>\
+                        <td>' + (feature.properties['LATITUDE'] !== null ? autolinker.link(feature.properties['LATITUDE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LONGITUDE</th>\
+                        <td>' + (feature.properties['LONGITUDE'] !== null ? autolinker.link(feature.properties['LONGITUDE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAICS_DESC</th>\
+                        <td>' + (feature.properties['NAICS_DESC'] !== null ? autolinker.link(feature.properties['NAICS_DESC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LINES</th>\
+                        <td>' + (feature.properties['LINES'] !== null ? autolinker.link(feature.properties['LINES'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MAX_VOLT</th>\
+                        <td>' + (feature.properties['MAX_VOLT'] !== null ? autolinker.link(feature.properties['MAX_VOLT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MIN_VOLT</th>\
+                        <td>' + (feature.properties['MIN_VOLT'] !== null ? autolinker.link(feature.properties['MIN_VOLT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MAX_INFER</th>\
+                        <td>' + (feature.properties['MAX_INFER'] !== null ? autolinker.link(feature.properties['MAX_INFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MIN_INFER</th>\
+                        <td>' + (feature.properties['MIN_INFER'] !== null ? autolinker.link(feature.properties['MIN_INFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HubName</th>\
+                        <td>' + (feature.properties['HubName'] !== null ? autolinker.link(feature.properties['HubName'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Dist_miles</th>\
+                        <td>' + (feature.properties['Dist_miles'] !== null ? autolinker.link(feature.properties['Dist_miles'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_FL_SubstationsClosest_8_0() {
+            return {
+                pane: 'pane_FL_SubstationsClosest_8',
+                radius: 5.5,
+                opacity: 1,
+                color: 'rgba(255,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,0,0,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_FL_SubstationsClosest_8');
+        map.getPane('pane_FL_SubstationsClosest_8').style.zIndex = 408;
+        map.getPane('pane_FL_SubstationsClosest_8').style['mix-blend-mode'] = 'normal';
+        var layer_FL_SubstationsClosest_8 = new L.geoJson(json_FL_SubstationsClosest_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_FL_SubstationsClosest_8',
+            layerName: 'layer_FL_SubstationsClosest_8',
+            pane: 'pane_FL_SubstationsClosest_8',
+            onEachFeature: pop_FL_SubstationsClosest_8,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_FL_SubstationsClosest_8_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_FL_SubstationsClosest_8);
+        map.addLayer(layer_FL_SubstationsClosest_8);
+        function pop_FL_Substions_All_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Substat_ID</th>\
+                        <td>' + (feature.properties['Substat_ID'] !== null ? autolinker.link(feature.properties['Substat_ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">STATUS</th>\
+                        <td>' + (feature.properties['STATUS'] !== null ? autolinker.link(feature.properties['STATUS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COUNTY</th>\
+                        <td>' + (feature.properties['COUNTY'] !== null ? autolinker.link(feature.properties['COUNTY'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LINES</th>\
+                        <td>' + (feature.properties['LINES'] !== null ? autolinker.link(feature.properties['LINES'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MAX_VOLT</th>\
+                        <td>' + (feature.properties['MAX_VOLT'] !== null ? autolinker.link(feature.properties['MAX_VOLT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MIN_VOLT</th>\
+                        <td>' + (feature.properties['MIN_VOLT'] !== null ? autolinker.link(feature.properties['MIN_VOLT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MAX_INFER</th>\
+                        <td>' + (feature.properties['MAX_INFER'] !== null ? autolinker.link(feature.properties['MAX_INFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MIN_INFER</th>\
+                        <td>' + (feature.properties['MIN_INFER'] !== null ? autolinker.link(feature.properties['MIN_INFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_FL_Substions_All_9_0() {
+            return {
+                pane: 'pane_FL_Substions_All_9',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(255,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,0,0,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_FL_Substions_All_9');
+        map.getPane('pane_FL_Substions_All_9').style.zIndex = 409;
+        map.getPane('pane_FL_Substions_All_9').style['mix-blend-mode'] = 'normal';
+        var layer_FL_Substions_All_9 = new L.geoJson(json_FL_Substions_All_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_FL_Substions_All_9',
+            layerName: 'layer_FL_Substions_All_9',
+            pane: 'pane_FL_Substions_All_9',
+            onEachFeature: pop_FL_Substions_All_9,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_FL_Substions_All_9_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_FL_Substions_All_9);
+        function pop_PropertiesFLLT500K_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">PropAddr</th>\
+                        <td>' + (feature.properties['PropAddr'] !== null ? autolinker.link(feature.properties['PropAddr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">City</th>\
+                        <td>' + (feature.properties['City'] !== null ? autolinker.link(feature.properties['City'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Zip</th>\
+                        <td>' + (feature.properties['Zip'] !== null ? autolinker.link(feature.properties['Zip'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CntyName</th>\
+                        <td>' + (feature.properties['CntyName'] !== null ? autolinker.link(feature.properties['CntyName'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MarketName</th>\
+                        <td>' + (feature.properties['MarketName'] !== null ? autolinker.link(feature.properties['MarketName'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FemaMapID</th>\
+                        <td>' + (feature.properties['FemaMapID'] !== null ? autolinker.link(feature.properties['FemaMapID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SP$</th>\
+                        <td>' + (feature.properties['SP$'] !== null ? autolinker.link(feature.properties['SP$'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FIRM_ID</th>\
+                        <td>' + (feature.properties['FIRM_ID'] !== null ? autolinker.link(feature.properties['FIRM_ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FIRM_Panel</th>\
+                        <td>' + (feature.properties['FIRM_Panel'] !== null ? autolinker.link(feature.properties['FIRM_Panel'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">InSFHA</th>\
+                        <td>' + (feature.properties['InSFHA'] !== null ? autolinker.link(feature.properties['InSFHA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Floodplain</th>\
+                        <td>' + (feature.properties['Floodplain'] !== null ? autolinker.link(feature.properties['Floodplain'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DaysOnMrkt</th>\
+                        <td>' + (feature.properties['DaysOnMrkt'] !== null ? autolinker.link(feature.properties['DaysOnMrkt'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Flood_Risk</th>\
+                        <td>' + (feature.properties['Flood_Risk'] !== null ? autolinker.link(feature.properties['Flood_Risk'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FemaFldZn</th>\
+                        <td>' + (feature.properties['FemaFldZn'] !== null ? autolinker.link(feature.properties['FemaFldZn'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LandAreaSF</th>\
+                        <td>' + (feature.properties['LandAreaSF'] !== null ? autolinker.link(feature.properties['LandAreaSF'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Zoning</th>\
+                        <td>' + (feature.properties['Zoning'] !== null ? autolinker.link(feature.properties['Zoning'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SaleCoName</th>\
+                        <td>' + (feature.properties['SaleCoName'] !== null ? autolinker.link(feature.properties['SaleCoName'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SaleCoCnt1</th>\
+                        <td>' + (feature.properties['SaleCoCnt1'] !== null ? autolinker.link(feature.properties['SaleCoCnt1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SalesCoPh1</th>\
+                        <td>' + (feature.properties['SalesCoPh1'] !== null ? autolinker.link(feature.properties['SalesCoPh1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Longitude</th>\
+                        <td>' + (feature.properties['Longitude'] !== null ? autolinker.link(feature.properties['Longitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Latitude</th>\
+                        <td>' + (feature.properties['Latitude'] !== null ? autolinker.link(feature.properties['Latitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_PropertiesFLLT500K_10_0() {
+            return {
+                pane: 'pane_PropertiesFLLT500K_10',
+                radius: 7.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(62,251,5,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PropertiesFLLT500K_10');
+        map.getPane('pane_PropertiesFLLT500K_10').style.zIndex = 410;
+        map.getPane('pane_PropertiesFLLT500K_10').style['mix-blend-mode'] = 'normal';
+        var layer_PropertiesFLLT500K_10 = new L.geoJson(json_PropertiesFLLT500K_10, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PropertiesFLLT500K_10',
+            layerName: 'layer_PropertiesFLLT500K_10',
+            pane: 'pane_PropertiesFLLT500K_10',
+            onEachFeature: pop_PropertiesFLLT500K_10,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_PropertiesFLLT500K_10_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_PropertiesFLLT500K_10);
+        map.addLayer(layer_PropertiesFLLT500K_10);
+        map.on("zoomend", function(e) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 9) {
+                map.addLayer(layer_OpportunityZonesFL_0);
+            } else if (map.getZoom() > 19 || map.getZoom() < 9) {
+                map.removeLayer(layer_OpportunityZonesFL_0);
+            }
+        });
+            if (map.getZoom() <= 19 && map.getZoom() >= 9) {
+                map.addLayer(layer_OpportunityZonesFL_0);
+            } else if (map.getZoom() > 19 || map.getZoom() < 9) {
+                map.removeLayer(layer_OpportunityZonesFL_0);
+            }
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Florida Properties and Substations</h2>';
+            };
+            title.addTo(map);
+            var abstract = new L.Control({'position':'bottomright'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+                    this._div.setAttribute("onmouseenter", "abstract.show()");
+                    this._div.setAttribute("onmouseleave", "abstract.hide()");
+                    this.hide();
+                    return this._div;
+                };
+                abstract.hide = function () {
+                    this._div.classList.remove("abstractUncollapsed");
+                    this._div.classList.add("abstract");
+                    this._div.innerHTML = 'i'
+                }
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = 'Webmap designed with QGIS and qgis2web software that depict Florida land purchase Opportuniies, Electrical Power Substations (SS), Power lines, and distances from subtations to the land sites. Queryfor  Distance between SS and Land opporunity are provided.<br />Designed by: Charles Huett, MBA, USN (ret\'d), VP & CIO Cognitive Contractor, LLC.<br />Date Created: December 31, 2022';
+            };
+            abstract.addTo(map);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/PropertiesFLLT500K_10.png" /> Properties FL LT $500K  ': layer_PropertiesFLLT500K_10,'<img src="legend/FL_Substions_All_9.png" /> FL_Substions_All': layer_FL_Substions_All_9,'<img src="legend/FL_SubstationsClosest_8.png" /> FL_SubstationsClosest': layer_FL_SubstationsClosest_8,'Dist from Prop to SS<br /><table><tr><td style="text-align: center;"><img src="legend/DistfromProptoSS_7_0040530.png" /></td><td>0.04 - 0.53</td></tr><tr><td style="text-align: center;"><img src="legend/DistfromProptoSS_7_0531011.png" /></td><td>0.53 - 1.01</td></tr><tr><td style="text-align: center;"><img src="legend/DistfromProptoSS_7_101152.png" /></td><td>1.01 - 1.5</td></tr><tr><td style="text-align: center;"><img src="legend/DistfromProptoSS_7_151993.png" /></td><td>1.5 - 1.99</td></tr><tr><td style="text-align: center;"><img src="legend/DistfromProptoSS_7_1992474.png" /></td><td>1.99 - 2.47</td></tr><tr><td style="text-align: center;"><img src="legend/DistfromProptoSS_7_2478725.png" /></td><td>2.47 - 8.72</td></tr></table>': layer_DistfromProptoSS_7,'<img src="legend/FL_Counties_6.png" /> FL_Counties': layer_FL_Counties_6,"Positron": layer_Positron_5,"Positron [no labels] (retina)": layer_Positronnolabelsretina_4,"OSM Standard": layer_OSMStandard_3,"Google Maps2": layer_GoogleMaps2_2,"Google Hybrid": layer_GoogleHybrid_1,'<img src="legend/OpportunityZonesFL_0.png" /> Opportunity Zones FL': layer_OpportunityZonesFL_0,}).addTo(map);
+        map.on("zoomend", function(){
+
+                if (map.hasLayer(layer_FL_Counties_6)) {
+                    if (map.getZoom() <= 8 && map.getZoom() >= 15) {
+                        layer_FL_Counties_6.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_FL_Counties_6.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        });
+        setBounds();
+        var i = 0;
+        layer_FL_Counties_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAME'] !== null?String('<div style="color: #323232; font-size: 20pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['NAME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_FL_Counties_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_DistfromProptoSS_7.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Dist'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['Dist']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_DistfromProptoSS_7'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+                if (map.hasLayer(layer_FL_Counties_6)) {
+                    if (map.getZoom() <= 8 && map.getZoom() >= 15) {
+                        layer_FL_Counties_6.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_FL_Counties_6.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"DaysOnMrkt": "int","Dist": "real","Dist_miles": "real","COUNTYNAME": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+        var i = 0;
+        layer_FL_Counties_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAME'] !== null?String('<div style="color: #323232; font-size: 20pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['NAME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_FL_Counties_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_DistfromProptoSS_7.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Dist'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['Dist']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_DistfromProptoSS_7'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_DaysOnMrkt = document.createElement("div");
+            div_DaysOnMrkt.id = "div_DaysOnMrkt";
+            div_DaysOnMrkt.className = "slider";
+            document.getElementById("menu").appendChild(div_DaysOnMrkt);
+            var lab_DaysOnMrkt = document.createElement('div');
+            lab_DaysOnMrkt.innerHTML  = 'DaysOnMrkt: <span id="val_DaysOnMrkt"></span>';
+            lab_DaysOnMrkt.className = 'filterlabel';
+            document.getElementById("menu").appendChild(lab_DaysOnMrkt);
+            var reset_DaysOnMrkt = document.createElement('div');
+            reset_DaysOnMrkt.innerHTML = 'clear filter';
+            reset_DaysOnMrkt.className = 'filterlabel';
+            lab_DaysOnMrkt.className = 'filterlabel';
+            reset_DaysOnMrkt.onclick = function() {
+                sel_DaysOnMrkt.noUiSlider.reset();
+            };
+            document.getElementById("menu").appendChild(reset_DaysOnMrkt);
+            var sel_DaysOnMrkt = document.getElementById('div_DaysOnMrkt');
+            noUiSlider.create(sel_DaysOnMrkt, {
+                connect: true,
+                start: [0, 6241],
+                step: 1,
+                format: wNumb({
+                    decimals: 0,
+                    }),
+                range: {
+                min: 0,
+                max: 6241
+                }
+            });
+            sel_DaysOnMrkt.noUiSlider.on('update', function (values) {
+            filterVals =[];
+            for (value in values){
+            filterVals.push(parseInt(value))
+            }
+            val_DaysOnMrkt = document.getElementById('val_DaysOnMrkt');
+            val_DaysOnMrkt.innerHTML = values.join(' - ');
+                filterFunc()
+            });
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Dist = document.createElement("div");
+            div_Dist.id = "div_Dist";
+            div_Dist.className = "slider";
+            document.getElementById("menu").appendChild(div_Dist);
+            var lab_Dist = document.createElement('div');
+            lab_Dist.innerHTML  = 'Dist: <span id="val_Dist"></span>';
+            lab_Dist.className = 'filterlabel';
+            document.getElementById("menu").appendChild(lab_Dist);
+            var reset_Dist = document.createElement('div');
+            reset_Dist.innerHTML = 'clear filter';
+            reset_Dist.className = 'filterlabel';
+            lab_Dist.className = 'filterlabel';
+            reset_Dist.onclick = function() {
+                sel_Dist.noUiSlider.reset();
+            };
+            document.getElementById("menu").appendChild(reset_Dist);
+            var sel_Dist = document.getElementById('div_Dist');
+            noUiSlider.create(sel_Dist, {
+                connect: true,
+                start: [0.04, 8.72],
+                range: {
+                min: 0.04,
+                max: 8.72
+                }
+            });
+            sel_Dist.noUiSlider.on('update', function (values) {
+            val_Dist = document.getElementById('val_Dist');
+            val_Dist.innerHTML = values.join(' - ');
+                filterFunc()
+            });
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Dist_miles = document.createElement("div");
+            div_Dist_miles.id = "div_Dist_miles";
+            div_Dist_miles.className = "slider";
+            document.getElementById("menu").appendChild(div_Dist_miles);
+            var lab_Dist_miles = document.createElement('div');
+            lab_Dist_miles.innerHTML  = 'Dist_miles: <span id="val_Dist_miles"></span>';
+            lab_Dist_miles.className = 'filterlabel';
+            document.getElementById("menu").appendChild(lab_Dist_miles);
+            var reset_Dist_miles = document.createElement('div');
+            reset_Dist_miles.innerHTML = 'clear filter';
+            reset_Dist_miles.className = 'filterlabel';
+            lab_Dist_miles.className = 'filterlabel';
+            reset_Dist_miles.onclick = function() {
+                sel_Dist_miles.noUiSlider.reset();
+            };
+            document.getElementById("menu").appendChild(reset_Dist_miles);
+            var sel_Dist_miles = document.getElementById('div_Dist_miles');
+            noUiSlider.create(sel_Dist_miles, {
+                connect: true,
+                start: [0.04, 8.72],
+                range: {
+                min: 0.04,
+                max: 8.72
+                }
+            });
+            sel_Dist_miles.noUiSlider.on('update', function (values) {
+            val_Dist_miles = document.getElementById('val_Dist_miles');
+            val_Dist_miles.innerHTML = values.join(' - ');
+                filterFunc()
+            });
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_COUNTYNAME = document.createElement('div');
+            div_COUNTYNAME.id = "div_COUNTYNAME";
+            div_COUNTYNAME.className= "filterselect";
+            document.getElementById("menu").appendChild(div_COUNTYNAME);
+            sel_COUNTYNAME = document.createElement('select');
+            sel_COUNTYNAME.multiple = true;
+            sel_COUNTYNAME.size = 10;
+            sel_COUNTYNAME.id = "sel_COUNTYNAME";
+            var COUNTYNAME_options_str = "<option value='' unselected></option>";
+            sel_COUNTYNAME.onchange = function(){filterFunc()};
+            COUNTYNAME_options_str  += '<option value="Alachua">Alachua</option>';
+            COUNTYNAME_options_str  += '<option value="Baker">Baker</option>';
+            COUNTYNAME_options_str  += '<option value="Bay">Bay</option>';
+            COUNTYNAME_options_str  += '<option value="Bradford">Bradford</option>';
+            COUNTYNAME_options_str  += '<option value="Brevard">Brevard</option>';
+            COUNTYNAME_options_str  += '<option value="Broward">Broward</option>';
+            COUNTYNAME_options_str  += '<option value="Calhoun">Calhoun</option>';
+            COUNTYNAME_options_str  += '<option value="Charlotte">Charlotte</option>';
+            COUNTYNAME_options_str  += '<option value="Citrus">Citrus</option>';
+            COUNTYNAME_options_str  += '<option value="Clay">Clay</option>';
+            COUNTYNAME_options_str  += '<option value="Collier">Collier</option>';
+            COUNTYNAME_options_str  += '<option value="Columbia">Columbia</option>';
+            COUNTYNAME_options_str  += '<option value="DeSoto">DeSoto</option>';
+            COUNTYNAME_options_str  += '<option value="Dixie">Dixie</option>';
+            COUNTYNAME_options_str  += '<option value="Duval">Duval</option>';
+            COUNTYNAME_options_str  += '<option value="Escambia">Escambia</option>';
+            COUNTYNAME_options_str  += '<option value="Flagler">Flagler</option>';
+            COUNTYNAME_options_str  += '<option value="Franklin">Franklin</option>';
+            COUNTYNAME_options_str  += '<option value="Gadsden">Gadsden</option>';
+            COUNTYNAME_options_str  += '<option value="Gilchrist">Gilchrist</option>';
+            COUNTYNAME_options_str  += '<option value="Glades">Glades</option>';
+            COUNTYNAME_options_str  += '<option value="Gulf">Gulf</option>';
+            COUNTYNAME_options_str  += '<option value="Hamilton">Hamilton</option>';
+            COUNTYNAME_options_str  += '<option value="Hardee">Hardee</option>';
+            COUNTYNAME_options_str  += '<option value="Hendry">Hendry</option>';
+            COUNTYNAME_options_str  += '<option value="Hernando">Hernando</option>';
+            COUNTYNAME_options_str  += '<option value="Highlands">Highlands</option>';
+            COUNTYNAME_options_str  += '<option value="Hillsborough">Hillsborough</option>';
+            COUNTYNAME_options_str  += '<option value="Holmes">Holmes</option>';
+            COUNTYNAME_options_str  += '<option value="Indian River">Indian River</option>';
+            COUNTYNAME_options_str  += '<option value="Jackson">Jackson</option>';
+            COUNTYNAME_options_str  += '<option value="Jefferson">Jefferson</option>';
+            COUNTYNAME_options_str  += '<option value="Lafayette">Lafayette</option>';
+            COUNTYNAME_options_str  += '<option value="Lake">Lake</option>';
+            COUNTYNAME_options_str  += '<option value="Lee">Lee</option>';
+            COUNTYNAME_options_str  += '<option value="Leon">Leon</option>';
+            COUNTYNAME_options_str  += '<option value="Levy">Levy</option>';
+            COUNTYNAME_options_str  += '<option value="Liberty">Liberty</option>';
+            COUNTYNAME_options_str  += '<option value="Madison">Madison</option>';
+            COUNTYNAME_options_str  += '<option value="Manatee">Manatee</option>';
+            COUNTYNAME_options_str  += '<option value="Marion">Marion</option>';
+            COUNTYNAME_options_str  += '<option value="Martin">Martin</option>';
+            COUNTYNAME_options_str  += '<option value="Miami-Dade">Miami-Dade</option>';
+            COUNTYNAME_options_str  += '<option value="Monroe">Monroe</option>';
+            COUNTYNAME_options_str  += '<option value="Nassau">Nassau</option>';
+            COUNTYNAME_options_str  += '<option value="Okaloosa">Okaloosa</option>';
+            COUNTYNAME_options_str  += '<option value="Okeechobee">Okeechobee</option>';
+            COUNTYNAME_options_str  += '<option value="Orange">Orange</option>';
+            COUNTYNAME_options_str  += '<option value="Osceola">Osceola</option>';
+            COUNTYNAME_options_str  += '<option value="Palm Beach">Palm Beach</option>';
+            COUNTYNAME_options_str  += '<option value="Pasco">Pasco</option>';
+            COUNTYNAME_options_str  += '<option value="Pinellas">Pinellas</option>';
+            COUNTYNAME_options_str  += '<option value="Polk">Polk</option>';
+            COUNTYNAME_options_str  += '<option value="Putnam">Putnam</option>';
+            COUNTYNAME_options_str  += '<option value="Santa Rosa">Santa Rosa</option>';
+            COUNTYNAME_options_str  += '<option value="Sarasota">Sarasota</option>';
+            COUNTYNAME_options_str  += '<option value="Seminole">Seminole</option>';
+            COUNTYNAME_options_str  += '<option value="St. Johns">St. Johns</option>';
+            COUNTYNAME_options_str  += '<option value="St. Lucie">St. Lucie</option>';
+            COUNTYNAME_options_str  += '<option value="Sumter">Sumter</option>';
+            COUNTYNAME_options_str  += '<option value="Suwannee">Suwannee</option>';
+            COUNTYNAME_options_str  += '<option value="Taylor">Taylor</option>';
+            COUNTYNAME_options_str  += '<option value="Union">Union</option>';
+            COUNTYNAME_options_str  += '<option value="Volusia">Volusia</option>';
+            COUNTYNAME_options_str  += '<option value="Wakulla">Wakulla</option>';
+            COUNTYNAME_options_str  += '<option value="Walton">Walton</option>';
+            COUNTYNAME_options_str  += '<option value="Washington">Washington</option>';
+            sel_COUNTYNAME.innerHTML = COUNTYNAME_options_str;
+            div_COUNTYNAME.appendChild(sel_COUNTYNAME);
+            var lab_COUNTYNAME = document.createElement('div');
+            lab_COUNTYNAME.innerHTML = 'COUNTYNAME';
+            lab_COUNTYNAME.className = 'filterlabel';
+            div_COUNTYNAME.appendChild(lab_COUNTYNAME);
+            var reset_COUNTYNAME = document.createElement('div');
+            reset_COUNTYNAME.innerHTML = 'clear filter';
+            reset_COUNTYNAME.className = 'filterlabel';
+            reset_COUNTYNAME.onclick = function() {
+                var options = document.getElementById("sel_COUNTYNAME").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_COUNTYNAME.appendChild(reset_COUNTYNAME);
+        resetLabels([layer_FL_Counties_6,layer_DistfromProptoSS_7,layer_FL_SubstationsClosest_8]);
+        map.on("zoomend", function(){
+            resetLabels([layer_FL_Counties_6,layer_DistfromProptoSS_7,layer_FL_SubstationsClosest_8]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_FL_Counties_6,layer_DistfromProptoSS_7,layer_FL_SubstationsClosest_8]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_FL_Counties_6,layer_DistfromProptoSS_7,layer_FL_SubstationsClosest_8]);
+        });
+        </script>
+    </body>
+</html>
